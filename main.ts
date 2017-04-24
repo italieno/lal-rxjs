@@ -31,15 +31,16 @@ source1.subscribe(new MyObserver());
 let source2 = Observable.create(observer => {
     
     let index = 0;
+    
     let produceValue = () => {
-        observer.next[numbers[index++]]
-    }
+        observer.next(numbers[index++]);
 
-    if (index < numbers.length){
-        setTimeout(produceValue, 500)
-    } 
-    else{
-        observer.complete();
+        if (index < numbers.length){
+            setTimeout(produceValue, 1000)
+        } 
+        else{
+            observer.complete();
+        }
     }
 
     produceValue();
