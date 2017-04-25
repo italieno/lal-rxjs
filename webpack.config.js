@@ -1,5 +1,5 @@
 module.exports = {
-    entry : "./main",
+    entry : "./main-simple-ajax-flatmap",
     output: {
         filename: "app.js"
     },
