@@ -1,42 +1,9 @@
 import {Observable, Observer} from "rxjs";
+import {load} from "./loader";
 
 let output = document.getElementById("output");
 let button = document.getElementById("btnGetMovies");
-
 let click = Observable.fromEvent(button, 'click');
-
-function load(url:string){
-    return Observable.create(observer => {
-        let xhr = new XMLHttpRequest();
-
-        xhr.addEventListener("load", () => {
-            if (xhr.status === 200){
-                let data = JSON.parse(xhr.responseText);
-                observer.next(data);
-                observer.complete();
-            }
-            else{
-                observer.error(xhr.statusText);
-            }
-        });
-
-        xhr.open("GET", url);
-        
-        xhr.send();
-    }).retryWhen(retryStrategy({ attempts: 3, delay: 1000 }));
-}
-
-function retryStrategy({ attempts = 4, delay = 500 }){ //default constructor
-    return function(errors){
-        return errors
-            .scan((acc, val) => {
-                console.log(acc, val);
-                return ++acc;
-            }, 0)
-            .takeWhile(acc => acc < attempts)
-            .delay(delay);
-    }
-}
 
 function renderMovies(movies){
     movies.forEach(m => {
@@ -46,10 +13,19 @@ function renderMovies(movies){
     });
 }
 
-click
-    .flatMap(e => load("data/movies.json"))
-    .subscribe(
-        renderMovies,
-        err => { console.log(`error: ${err}`); },
-        () => { console.log(`finished`); }
-    );
+let subscription = load("data/movies.json")
+                    .subscribe(
+                        renderMovies,
+                        err => { console.log(`error: ${err}`); },
+                        () => { console.log(`finished`); }
+                    );
+
+//subscription.unsubscribe();                  
+
+// click
+//     .flatMap(e => load("data/movies.json"))
+//     .subscribe(
+//         renderMovies,
+//         err => { console.log(`error: ${err}`); },
+//         () => { console.log(`finished`); }
+//     );
