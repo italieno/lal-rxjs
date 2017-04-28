@@ -1,0 +1,4 @@
+
+1) npm install webpack webpack-dev-server typescript typings ts-loader --save-dev
+
+2) node typings install dt~es6-shim --global --save
